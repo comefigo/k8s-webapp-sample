@@ -1,0 +1,19 @@
+version: "3.7"
+services: 
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: k8s-sample-app
+    container_name: k8s-sample-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - common.env
+  db:
+    image: redis:4
+    container_name: k8s-sample-db
+    volumes:
+      - ./db/data:/data
+    env_file:
+      - common.env
