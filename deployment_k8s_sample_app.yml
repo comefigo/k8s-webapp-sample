@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-redis
+  labels:
+    app: sample-redis
+    type: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-redis
+      type: db
+  template:
+    metadata:
+      labels:
+        app: sample-redis
+        type: db
+    spec:
+      containers:
+      - name: sample-redis
+        image: redis:4
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: redis-volume
+      volumes:
+      - name: redis-volume
+        hostPath:
+          path: /redis-data
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-redis
+  labels:
+    app: sample-redis
+    type: db
+spec:
+  type: LoadBalancer
+  selector:
+    app: sample-redis
+    type: db
+  ports:
+  - port: 6379
+    targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  labels:
+    app: sample-app
+    type: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+      type: app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+        type: app
+    spec:
+      containers:
+      - name: sample-app
+        image: sample-app:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MODE
+          value: k8s
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app
+  labels:
+    app: sample-app
+    type: app
+spec:
+  type: LoadBalancer
+  selector:
+    app: sample-app
+    type: app
+  ports:
+  - port: 3000

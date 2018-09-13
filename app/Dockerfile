@@ -1,4 +1,9 @@
 FROM node:6.9.2
-EXPOSE 8080
+
+COPY package.json .
 COPY server.js .
+
+RUN npm install
+
+EXPOSE 8080
 CMD node server.js

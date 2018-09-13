@@ -10,10 +10,14 @@ services:
       - "3000:3000"
     env_file:
       - common.env
-  db:
+    depends_on:
+      - redis
+  redis:
     image: redis:4
     container_name: k8s-sample-db
     volumes:
       - ./db/data:/data
+    ports:
+      - "6379:6379"
     env_file:
       - common.env
