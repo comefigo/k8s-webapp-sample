@@ -1,12 +1,14 @@
 const http = require('http');
 const redis = require('redis');
-let redis_host = 'redis'
+let redis_host = 'redis';
+let redis_port = 6379;
 if (process.env.MODE && process.env.MODE == 'k8s') {
     redis_host = process.env.SAMPLE_REDIS_SERVICE_HOST;
+    redis_port = process.env.SAMPLE_REDIS_SERVICE_PORT;
 }
 const client = redis.createClient({
     host: redis_host,
-    port: 6379
+    port: redis_port
 });
 let redis_val = '';
 

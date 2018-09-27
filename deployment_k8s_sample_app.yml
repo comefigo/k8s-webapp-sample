@@ -28,7 +28,7 @@ spec:
       volumes:
       - name: redis-volume
         hostPath:
-          path: /redis-data
+          path: /home/docker/redis-data
           type: DirectoryOrCreate
 ---
 apiVersion: v1
