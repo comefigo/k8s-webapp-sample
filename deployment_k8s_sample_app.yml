@@ -22,13 +22,17 @@ spec:
         image: redis:4
         ports:
         - containerPort: 6379
+        # redis-volumeボリュームとredisのデータ領域の/data
         volumeMounts:
         - mountPath: /data
           name: redis-volume
+      # データ永続化するためのボリューム
       volumes:
       - name: redis-volume
+        # ボリュームの種別はhostPath
         hostPath:
           path: /home/docker/redis-data
+          # ディレクトリがなければ作る
           type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -71,6 +75,7 @@ spec:
         image: sample-app:v1
         ports:
         - containerPort: 3000
+        # k8s環境用で稼働しているかどうかの環境変数
         env:
         - name: MODE
           value: k8s
